@@ -1,0 +1,13 @@
+names:
+- '0'
+- fire
+nc: 2
+roboflow:
+  license: CC BY 4.0
+  project: fire-dataset-for-yolov8-deupo
+  url: https://universe.roboflow.com/cctv-detection-njw1h/fire-dataset-for-yolov8-deupo/dataset/1
+  version: 1
+  workspace: cctv-detection-njw1h
+test: ../test/images
+train: ../train/images
+val: ../valid/images
