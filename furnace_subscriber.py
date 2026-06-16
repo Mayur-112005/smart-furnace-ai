@@ -9,15 +9,33 @@ PORT   = 1883
 TOPIC  = "plant/furnace1/sensor_data"
 
 # InfluxDB config
-INFLUX_URL   = "http://localhost:8086"
-INFLUX_TOKEN = "_uKzAe62QagRrFOTHfa4jskRLicanl048jmP2vKa6MWoHKE51524Zs87WHnrkeC6o8blUoUac4RH6sBqLG5N2A=="
-INFLUX_ORG   = "furnace_org"
+INFLUX_URL    = "http://localhost:8086"
+INFLUX_TOKEN  = "_uKzAe62QagRrFOTHfa4jskRLicanl048jmP2vKa6MWoHKE51524Zs87WHnrkeC6o8blUoUac4RH6sBqLG5N2A=="
+INFLUX_ORG    = "furnace_org"
 INFLUX_BUCKET = "furnace_data"
 
 SEVERITY = {
     "WEAK":     "MEDIUM",
     "HIGH":     "HIGH",
     "UNSTABLE": "CRITICAL"
+}
+
+RECOMMENDATIONS = {
+    "WEAK": [
+        "Increase electrode current by 5%",
+        "Check raw material feed rate",
+        "Inspect electrode positioning"
+    ],
+    "HIGH": [
+        "Reduce feed rate by 8%",
+        "Check cooling water flow",
+        "Monitor electrode consumption rate"
+    ],
+    "UNSTABLE": [
+        "Reduce feed rate by 5% immediately",
+        "Adjust electrode penetration depth",
+        "Alert shift supervisor — possible burden hanging"
+    ]
 }
 
 # Connect to InfluxDB
@@ -40,7 +58,11 @@ def on_message(client, userdata, msg):
 
     if flame != "NORMAL":
         severity = SEVERITY.get(flame, "UNKNOWN")
+        actions  = RECOMMENDATIONS.get(flame, [])
         print(f"  *** ALERT: Abnormal flame detected! | Severity: {severity} ***")
+        print(f"  🤖 AI Recommendations:")
+        for i, action in enumerate(actions, 1):
+            print(f"     {i}. {action}")
 
     # Write to InfluxDB
     point = (
